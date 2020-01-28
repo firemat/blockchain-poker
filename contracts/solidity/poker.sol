@@ -4,6 +4,7 @@ contract poker {
     enum State {UNCERTAIN, VALID, ALLIN, FOLD}
     string[52] deck = ['p7', 'h6', 't14', 'h12', 'c10', 'p9', 'c3', 't2', 'p11', 'c14', 'c4', 'h5', 'p12', 'c2', 'h13', 't5', 't13', 'p2', 'c5', 'h2', 'h10', 'h7','p4', 'c12', 'h8', 'c7', 'p14', 'c8', 't8', 't11', 't12', 'h14', 'h4','c11', 't4', 'c6', 'p10', 't9', 'p6', 't3', 't6', 'p13', 'c9', 'h11', 'p5', 't10', 'p8', 'h3', 't7', 'p3', 'h9', 'c13'];
     uint8 deck_i = 0;
+    uint8 current_turn = 1;
 
     struct Player {
         string[2] hand;
@@ -50,5 +51,9 @@ contract poker {
             }
         }
     }*/
+
+    function nextRound() public returns (uint8) {
+        return ++current_turn;
+    }
 }
 
