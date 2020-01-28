@@ -54,6 +54,10 @@ contract poker {
         }
     }*/
 
+    function getToken() public view returns (uint16) {
+        return players[ad2Index[msg.sender]].tokens;
+    }
+
     function nextRound() public returns (uint8) {
         return ++current_turn;
     }
