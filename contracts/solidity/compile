@@ -1,0 +1,8 @@
+## Sample smart contract compile scripy
+
+#!/bin/bash
+rm -rf ../build
+solc Broutille.sol --bin --abi --optimize -o ../build
+cd ../build
+web3j solidity generate ./broutille.bin ./broutille.abi -p fr.insa.drim.schieder.etherdemo.animal -o ../../src/main/java/
+
