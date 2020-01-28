@@ -14,12 +14,14 @@ contract poker {
 
     uint8 constant NB_PLAYER = 2;
     Player[] players;
+    mapping (address => uint256) ad2Index;
     uint128 constant FEE = 10**3;
     uint128 gain = 0; 
 
     function join() public payable{
-        require (msg.value == FEE);
         if(players.length < NB_PLAYER) {
+            require (msg.value == FEE);
+            ad2Index[msg.sender] = players.length;
             string[2] memory hand = [deck[deck_i++], deck[deck_i++]];
             players.push(Player(hand, 100, State.UNCERTAIN, msg.sender));
             gain += FEE;
