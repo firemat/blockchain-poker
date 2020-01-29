@@ -103,9 +103,44 @@ contract poker {
         return players[ad2Index[msg.sender]].tokens;
     }
 
+    function compareHands(uint p1, uint p2) public view returns (bool) {
+        //Get full hand
+        string[] memory handPlayer1;
+        string[] memory handPlayer2;
+        uint pos = 0;
+        for (uint a=0; a < players[p1].hand.length; a++) {
+            handPlayer1[pos] = players[p1].hand[a];
+            handPlayer2[pos] = players[p2].hand[a];
+            pos++;
+        }
+        for (uint b=0; b < card_revealed.length; b++) {
+            handPlayer1[pos] = card_revealed[b];
+            handPlayer2[pos] = card_revealed[b];
+            pos++;
+        }
+
+        //TODO compare hand
+        //Return True if p1 has a stronger hand than p2, else false
+
+        return false;
+    }
+
     function getWinningPlayer() public view returns (uint) {
-        //TODO get winner
-        return ad2Index[msg.sender];
+        uint winner = 0;
+        for(uint i=0; i<players.length; i++) {
+            for(uint j=0; j<players.length; j++) {
+                if(i!=j && compareHands(i, j) == false){
+                    winner = j;
+                    break;
+                }
+            }
+            if(i==winner){
+                return winner;
+            }else{
+                i=winner;
+            }
+        }
+        return winner;
     }
 
     function distributeGains() public returns (bool) {
