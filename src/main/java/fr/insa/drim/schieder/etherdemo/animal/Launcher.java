@@ -22,11 +22,21 @@ public class Launcher {
 
         // Block program until enter key was hit.
         Scanner scanner = new Scanner(System.in);
-        System.out.println("[Press enter to join a table (enter fee: 1 ETH)]");
+        System.out.println("[J1 - Press enter to join a table (enter fee: 1 ETH)]");
         scanner.nextLine();
 
         // Join the game and listen to reply
         String reaction = poker.join().send();
+        if(reaction.equals("0")){
+            System.out.println("You cannot join the game, there is too many players !");
+            return;
+        }
+        System.out.println(String.format("Your table has now %s players!",reaction));
+
+        System.out.println("[J2 - Press enter to join a table (enter fee: 1 ETH)]");
+        scanner.nextLine();
+
+        reaction = poker.join().send();
         if(reaction.equals("0")){
             System.out.println("You cannot join the game, there is too many players !");
             return;
