@@ -18,7 +18,7 @@ public class Launcher {
         PokerDeployer deployer = new PokerDeployer();
         Poker poker = deployer.transferContract();
 
-        System.out.println("Contract transmitted to blockchain -> Broutille is alive and ready for interaction.");
+        System.out.println("Contract transmitted to blockchain -> Game ready for interaction.");
 
         // Block program until enter key was hit.
         Scanner scanner = new Scanner(System.in);
@@ -31,7 +31,9 @@ public class Launcher {
             System.out.println("You cannot join the game, there is too many players !");
             return;
         }
-        System.out.println(String.format("Your table has already %s players!",reaction));
+        System.out.println(String.format("Your table has now %s players!",reaction));
 
+        //TODO implemet J2
+        //TODO handle quit, kickPlayer, getToken, victoryGame, distributeGains, victoryRound
     }
 }
