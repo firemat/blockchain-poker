@@ -22,14 +22,16 @@ contract poker {
     uint128 constant FEE = 10**3; // change to 10**18
     uint128 gain = 0; 
 
-    function join() public payable{
+    function join() public payable returns (uint) {
         if(players.length < NB_PLAYER) {
             require (msg.value == FEE);
             ad2Index[msg.sender] = players.length;
             string[2] memory hand = [deck[deck_i++], deck[deck_i++]];
             players.push(Player(hand, 100, State.UNCERTAIN, msg.sender, 0));
             gain += FEE;
+            return players.length;
         }
+        return 0;
     }
 
     function quit() public returns (address) {
