@@ -15,52 +15,35 @@ public class Launcher {
 
         System.out.println("Trying to deposit a smart contract in the blockchain using java and web3j...");
 
-        AnimalDeployer deployer = new AnimalDeployer();
-        Broutille broutille = deployer.transferContract();
+        PokerDeployer deployer = new PokerDeployer();
+        Poker poker = deployer.transferContract();
 
-        System.out.println("Contract transmitted to blockchain -> Broutille is alive and ready for interaction.");
+        System.out.println("Contract transmitted to blockchain -> Game ready for interaction.");
 
         // Block program until enter key was hit.
         Scanner scanner = new Scanner(System.in);
-        System.out.println("[Press enter to caress Broutille]");
+        System.out.println("[J1 - Press enter to join a table (enter fee: 1 ETH)]");
         scanner.nextLine();
 
-        // Caress the animal and listen to reply
-        String reaction = broutille.caress().send();
-        System.out.println("Caressed the cat and got reaction: " + reaction);
+        // Join the game and listen to reply
+        String reaction = poker.join().send();
+        if(reaction.equals("0")){
+            System.out.println("You cannot join the game, there is too many players !");
+            return;
+        }
+        System.out.println(String.format("Your table has now %s players!",reaction));
 
-        // Block program until a key was hit.
-        System.out.println("[Press enter to offer a yoghurt and caress Broutille again]");
+        System.out.println("[J2 - Press enter to join a table (enter fee: 1 ETH)]");
         scanner.nextLine();
 
-        // Offer a yoghurt to the animal
-        broutille.offerYoghurt().send();
-        reaction = broutille.caress().send();
-        System.out.println("Offered a virtual yoghurt, caressed and got reaction: " + reaction);
+        reaction = poker.join().send();
+        if(reaction.equals("0")){
+            System.out.println("You cannot join the game, there is too many players !");
+            return;
+        }
+        System.out.println(String.format("Your table has now %s players!",reaction));
 
-        // Block program until a key was hit.
-        System.out.println("[Press enter to offer another yoghurt and caress Broutille again]");
-        scanner.nextLine();
-
-        // Offer a yoghurt to the animal
-        broutille.offerYoghurt().send();
-        reaction = broutille.caress().send();
-        System.out.println("Offered a virtual yoghurt, caressed and got reaction: " + reaction);
-
-        // Block program until a key was hit.
-        System.out.println("[Press enter to offer another yoghurt and caress Broutille again]");
-        scanner.nextLine();
-
-        // Offer a yoghurt to the animal
-        broutille.offerYoghurt().send();
-        reaction = broutille.caress().send();
-        System.out.println("Offered a virtual yoghurt, caressed and got reaction: " + reaction);
-
-        // Block program until a key was hit.
-        System.out.println("[Press enter to kill the cat]");
-        scanner.nextLine();
-
-        broutille.kill().send();
-        System.out.println("The cat is dead :-(");
+        //TODO implemet J2
+        //TODO handle quit, kickPlayer, getToken, victoryGame, distributeGains, victoryRound
     }
 }
