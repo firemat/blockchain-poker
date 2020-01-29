@@ -87,7 +87,21 @@ contract poker {
         return players[ad2Index[msg.sender]].tokens;
     }
 
-    function nextRound() public returns (uint8) {
+    function getWinningPlayer() public view returns (uint) {
+        //TODO get winner
+        return ad2Index[msg.sender];
+    }
+
+    function distributeGains() public returns (bool) {
+        uint idWinner = getWinningPlayer();
+        players[idWinner].tokens = tokens_pot;
+        tokens_pot = 0;
+        return true;
+    }
+
+    function victoryRound() public returns (uint8) {
+        //Il faut avoir déjà mis les jetons dans le pot
+        distributeGains();      //Distribuer les gains
         return ++current_turn;
     }
 }
