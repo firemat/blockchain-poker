@@ -15,14 +15,14 @@ public class Launcher {
 
         System.out.println("Trying to deposit a smart contract in the blockchain using java and web3j...");
 
-        AnimalDeployer deployer = new AnimalDeployer();
-        Broutille broutille = deployer.transferContract();
+        PokerDeployer deployer = new PokerDeployer();
+        Poker broutille = deployer.transferContract();
 
         System.out.println("Contract transmitted to blockchain -> Broutille is alive and ready for interaction.");
 
         // Block program until enter key was hit.
         Scanner scanner = new Scanner(System.in);
-        System.out.println("[Press enter to caress Broutille]");
+        System.out.println("[Press enter to join a table]");
         scanner.nextLine();
 
         // Caress the animal and listen to reply
