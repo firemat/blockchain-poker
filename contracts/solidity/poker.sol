@@ -16,7 +16,7 @@ contract poker {
     uint8 constant NB_PLAYER = 2;
     Player[] players;
     mapping (address => uint256) ad2Index;
-    uint128 constant FEE = 10**3;
+    uint128 constant FEE = 10**3; // change to 10**18
     uint128 gain = 0; 
 
     function join() public payable{
@@ -33,26 +33,20 @@ contract poker {
         
     }*/
 
+    function kickPlayer(address id) private {
+
+    }
+
     function get() public view returns (uint128) {
         return gain;
     }
 
-    /*constructor() public {
-        hand = ["", ""];
-        tokens = 100;
-        playerState = State.UNCERTAIN;
-
-        uint i;
-        uint j;
-        uint pos = 0;
-        string[4] type = ["c", "t", "h", "p"]
-        for(i=0; i<type.length; i++) {
-            for(j=2; j<15; i++) {
-                deck[pos] = type[i] + j;
-                pos++;
-            }
+    function victoryGame() public {
+        if(players.length < 2) {
+            players[0].id.transfer(gain*95/100); // What if all player quit ?
+            kickPlayer(players[0].id);
         }
-    }*/
+    }
 
     function getToken() public view returns (uint16) {
         return players[ad2Index[msg.sender]].tokens;
