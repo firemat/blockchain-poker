@@ -43,7 +43,6 @@ public class Launcher {
         }
         System.out.println(String.format("Your table has now %s players!",reaction));
 
-        //TODO implemet J2
         //TODO handle quit, kickPlayer, getToken, victoryGame, distributeGains, victoryRound
     }
 }

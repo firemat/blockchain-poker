@@ -1,11 +1,15 @@
 package fr.insa.drim.schieder.etherdemo.animal;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Uint;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -48,7 +52,7 @@ public class Poker extends Contract {
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
-    //TODO check param for methods below
+
     public RemoteCall<String> quit() {
         final Function function = new Function(FUNC_QUIT,
                 Arrays.<Type>asList(),
@@ -63,9 +67,11 @@ public class Poker extends Contract {
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
-    public RemoteCall<String> play() {
+    public RemoteCall<String> play(int tokensToPlay) {
+        List<Type> inputParameters= new ArrayList<>();
+        inputParameters.add(new Uint( BigInteger.valueOf(tokensToPlay)));
         final Function function = new Function(FUNC_PLAY,
-                Arrays.<Type>asList(),
+                inputParameters,
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
