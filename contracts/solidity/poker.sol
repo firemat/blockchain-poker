@@ -3,6 +3,7 @@ pragma solidity ^0.4.17;
 contract poker {
     enum State {UNCERTAIN, VALID, ALLIN, FOLD}
     string[52] deck = ['p7', 'h6', 't14', 'h12', 'c10', 'p9', 'c3', 't2', 'p11', 'c14', 'c4', 'h5', 'p12', 'c2', 'h13', 't5', 't13', 'p2', 'c5', 'h2', 'h10', 'h7','p4', 'c12', 'h8', 'c7', 'p14', 'c8', 't8', 't11', 't12', 'h14', 'h4','c11', 't4', 'c6', 'p10', 't9', 'p6', 't3', 't6', 'p13', 'c9', 'h11', 'p5', 't10', 'p8', 'h3', 't7', 'p3', 'h9', 'c13'];
+    string[5] card_revealed;
     uint8 deck_i = 0;
     uint8 current_turn = 1;
     uint16 tokens_pot = 0;
@@ -14,6 +15,7 @@ contract poker {
         State playerState;
         address id;
         uint16 raise;
+        uint score;
     }
 
     uint8 constant NB_PLAYER = 2;
@@ -27,7 +29,7 @@ contract poker {
             require (msg.value == FEE);
             ad2Index[msg.sender] = players.length;
             string[2] memory hand = [deck[deck_i++], deck[deck_i++]];
-            players.push(Player(hand, 100, State.UNCERTAIN, msg.sender, 0));
+            players.push(Player(hand, 100, State.UNCERTAIN, msg.sender, 0, 0));
             gain += FEE;
         }
     }
@@ -102,6 +104,12 @@ contract poker {
     function getToken() public view returns (uint16) {
         return players[ad2Index[msg.sender]].tokens;
     }
+    
+    function computeScore(address id) {
+      Player memory p = players[ad2Index[id]];
+      string[7] memory hand = [p.hand[0], p.hand[1], card_revealed[0], card_revealed[1], card_revealed[2], card_revealed[3], card_revealed[4]];      
+      
+    }
 
     function compareHands(uint p1, uint p2) public view returns (bool) {
         //Get full hand
@@ -122,7 +130,21 @@ contract poker {
         //TODO compare hand
         //Return True if p1 has a stronger hand than p2, else false
 
+
+
         return false;
+    }
+
+    function stringToUint(string s) constant returns (uint result) {
+        bytes memory b = bytes(s);
+        uint i;
+        result = 0;
+        for (i = 0; i < b.length; i++) {
+            uint c = uint(b[i]);
+            if (c >= 48 && c <= 57) {
+                result = result * 10 + (c - 48);
+            }
+        }
     }
 
     function getWinningPlayer() public view returns (uint) {
