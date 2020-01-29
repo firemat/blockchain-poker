@@ -32,12 +32,28 @@ contract poker {
         }
     }
 
-    /*function quit() public {
-        
-    }*/
+    function quit() public returns (address) {
+        address id_quit;
+        id_quit= msg.sender;
+        kickPlayer(id_quit);
+        return id_quit;        
+    }
 
-    function kickPlayer(address id) private {
+    function kickPlayer(address id_quit) private returns (Player[]){
+        uint index;
+        for(uint j=0; j<players.length-1; j++){
+            if(players[j].id==id_quit){
+                index=j;
+            }
+        }
+        if(j >= players.length) return;
+        for(uint i=index; i<players.length-1; i++) {
+            players[i]=players[i+1];
+        }
 
+        delete players[players.length-1];
+        players.length--;
+        return players;
     }
 
     function play(uint16 amount) public {      
