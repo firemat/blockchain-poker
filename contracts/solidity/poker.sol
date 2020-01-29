@@ -5,6 +5,7 @@ contract poker {
     string[52] deck = ['p7', 'h6', 't14', 'h12', 'c10', 'p9', 'c3', 't2', 'p11', 'c14', 'c4', 'h5', 'p12', 'c2', 'h13', 't5', 't13', 'p2', 'c5', 'h2', 'h10', 'h7','p4', 'c12', 'h8', 'c7', 'p14', 'c8', 't8', 't11', 't12', 'h14', 'h4','c11', 't4', 'c6', 'p10', 't9', 'p6', 't3', 't6', 'p13', 'c9', 'h11', 'p5', 't10', 'p8', 'h3', 't7', 'p3', 'h9', 'c13'];
     uint8 deck_i = 0;
     uint8 current_turn = 1;
+    uint16 tokens_pot = 0;
 
     struct Player {
         string[2] hand;
@@ -52,7 +53,21 @@ contract poker {
         return players[ad2Index[msg.sender]].tokens;
     }
 
-    function nextRound() public returns (uint8) {
+    function getWinningPlayer() public view returns (uint) {
+        //TODO get winner
+        return ad2Index[msg.sender];
+    }
+
+    function distributeGains() public returns (bool) {
+        uint idWinner = getWinningPlayer();
+        players[idWinner].tokens = tokens_pot;
+        tokens_pot = 0;
+        return true;
+    }
+
+    function victoryRound() public returns (uint8) {
+        //Il faut avoir déjà mis les jetons dans le pot
+        distributeGains();      //Distribuer les gains
         return ++current_turn;
     }
 }
