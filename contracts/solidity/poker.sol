@@ -62,6 +62,17 @@ contract poker {
         return players;
     }
 
+    function drawsCard() private returns(string){
+        string storage nextCard=deck[deck_i++];
+        return nextCard;
+    }
+    
+    function reveledRiver() public {
+        for (uint i=0; i<5; i++){
+            card_revealed[i]=drawsCard();
+        }
+    }
+
     function play(uint16 amount) public {      
       Player memory p = players[ad2Index[msg.sender]];
       require(p.playerState==State.UNCERTAIN);
