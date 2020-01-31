@@ -30,7 +30,7 @@ contract poker {
         if(players.length < NB_PLAYER) {
             require (msg.value == FEE);
             ad2Index[msg.sender] = players.length;
-            string[2] memory hand = [deck[deck_i++], deck[deck_i++]];
+            string[2] memory hand = [drawsCard(), drawsCard()];
             players.push(Player(hand, 100, State.UNCERTAIN, msg.sender, 0, 0));
             gain += FEE;
             return players.length;
@@ -63,12 +63,12 @@ contract poker {
     }
 
     function drawsCard() private returns(string){
-        string storage nextCard=deck[deck_i++];
+        string storage nextCard=deck[deck_i++%52];
         return nextCard;
     }
     
     function reveledRiver() public {
-        for (uint i=0; i<5; i++){
+        for (uint i=0; i<3; i++){
             card_revealed[i]=drawsCard();
         }
     }
@@ -109,33 +109,36 @@ contract poker {
         return gain;
     }
 
-    function victoryGame() public {
+    function victoryGame() public returns (bool) {
         if(players.length < 2) {
             players[0].id.transfer(gain*95/100); // What if all player quit ?
             kickPlayer(players[0].id);
+            return true;
         }
+        return false;
     }
 
     function getToken() public view returns (uint16) {
         return players[ad2Index[msg.sender]].tokens;
     }
     
-    function computeScores(address id) private view {
+    function computeScores(address id) private {
       for(uint i = 0; i<players.length; i++) {
-        Player memory p = players[ad2Index[id]];
+        Player storage p = players[ad2Index[id]];
         int[5] memory ranks = [stringToInt(p.hand[0]),stringToInt(p.hand[1]),stringToInt(card_revealed[0]),stringToInt(card_revealed[1]),stringToInt(card_revealed[2])];
         int[5] memory colors = [toColor(p.hand[0]),toColor(p.hand[1]),toColor(card_revealed[0]),toColor(card_revealed[1]),toColor(card_revealed[2])];
         p.score = rankPokerHand(ranks, colors);
       }      
     }
 
-    function toColor(string s) private pure returns (int) {
-      int color;
+    function toColor(string s) public pure returns (int) {
+      int color=-1;
       bytes memory str = bytes(s);
-      if(str[0]=='c') color = 1;
-      else if(str[0]=='t') color = 2;
-      else if(str[0]=='p') color = 4;
-      else if(str[0]=='h') color = 8;
+      uint c = uint(str[0]);
+      if (c == 99) color = 1; //c
+      else if(str[0]==116) color = 2; //t
+      else if(str[0]==112) color = 4; //p
+      else if(str[0]==104) color = 8; //h
       return color;
     }
 
@@ -155,7 +158,7 @@ contract poker {
       return hands_point[uint(v)]+cs[0]+cs[1]+cs[2]+cs[3]+cs[4];
     }
 
-    function stringToInt(string s) private pure returns (int){
+    function stringToInt(string s) public pure returns (int){
         bytes memory b = bytes(s);
         uint i;
         uint result = 0;
@@ -168,10 +171,19 @@ contract poker {
         return int(result);
     }
 
-    function getWinningPlayer() public view returns (uint) {
+    function getScores() public view returns (int[2]) {
+      int[2] memory scores;
+      for(uint i = 0; i<players.length; i++) {
+        scores[i] = players[i].score;
+      }
+      return scores;
+    }
+
+    function getWinningPlayer() public returns (uint) {
         uint winner = 0;
         int max_score = 0;
         for(uint i=0; i<players.length; i++) {
+            computeScores(players[i].id);
             if(players[i].score > max_score) {
               max_score = players[i].score;
               winner = i;
@@ -180,7 +192,7 @@ contract poker {
         return winner;
     }
 
-    function distributeGains() public returns (bool) {
+    function distributeGains() private returns (bool) {
         uint idWinner = getWinningPlayer();
         players[idWinner].tokens = tokens_pot;
         tokens_pot = 0;
@@ -190,6 +202,11 @@ contract poker {
     function victoryRound() public returns (uint8) {
         //Il faut avoir déjà mis les jetons dans le pot
         distributeGains();      //Distribuer les gains
+        for(uint i = 0; i<players.length;i++) {
+          if(players[i].tokens <= 0) {
+            kickPlayer(players[i].id);
+          }
+        }
         return ++current_turn;
     }
 }
