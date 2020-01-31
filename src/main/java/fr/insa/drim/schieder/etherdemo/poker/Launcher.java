@@ -1,5 +1,9 @@
 package fr.insa.drim.schieder.etherdemo.poker;
 
+
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
+import java.math.BigInteger;
 import java.util.Scanner;
 
 /**
@@ -26,7 +30,7 @@ public class Launcher {
         scanner.nextLine();
 
         // Join the game and listen to reply
-        String reaction = poker.join().send();
+        TransactionReceipt reaction = poker.join(new BigInteger("1")).send();
         if(reaction.equals("0")){
             System.out.println("You cannot join the game, there is too many players !");
             return;
@@ -36,7 +40,7 @@ public class Launcher {
         System.out.println("[J2 - Press enter to join a table (enter fee: 1 ETH)]");
         scanner.nextLine();
 
-        reaction = poker.join().send();
+        reaction = poker.join(new BigInteger("1")).send();
         if(reaction.equals("0")){
             System.out.println("You cannot join the game, there is too many players !");
             return;
@@ -52,20 +56,20 @@ public class Launcher {
         System.out.println("[J1 - Your turn]");
         System.out.println("[J1 - You want to wager how many tokens ?]");
         int token = Integer.parseInt(scanner.nextLine());
-        reaction = poker.play(token).send();
+        reaction = poker.play(new BigInteger(String.valueOf(token))).send();
 
 
         System.out.println("[J2 - Your turn]");
         System.out.println("[J2 - You want to wager how many tokens ?]");
         token = Integer.parseInt(scanner.nextLine());
-        reaction = poker.play(token).send();
+        reaction = poker.play(new BigInteger(String.valueOf(token))).send();
 
         System.out.println("[Everyone - Turn 1 is over]");
         poker.victoryRound().send();
-        reaction = poker.getToken().send();
-        System.out.println(String.format("[J1 - You have now %s tokens!]",reaction));
-        reaction = poker.getToken().send();
-        System.out.println(String.format("[J2 - You have now %s tokens!]",reaction));
+        BigInteger nbJeton = poker.getToken().send();
+        System.out.println(String.format("[J1 - You have now %s tokens!]",nbJeton.toString()));
+        nbJeton = poker.getToken().send();
+        System.out.println(String.format("[J2 - You have now %s tokens!]",nbJeton.toString()));
         System.out.println("[Everyone - Turn 2 is beginning]");
         //TODO Turn 2
         System.out.println("[Everyone - Turn 2 is over]");
