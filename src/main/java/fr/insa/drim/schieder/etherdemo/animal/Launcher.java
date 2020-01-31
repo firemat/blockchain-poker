@@ -32,7 +32,7 @@ public class Launcher {
             return;
         }
         System.out.println(String.format("Your table has now %s players!",reaction));
-
+        //TODO check how to change player address
         System.out.println("[J2 - Press enter to join a table (enter fee: 1 ETH)]");
         scanner.nextLine();
 
@@ -43,6 +43,35 @@ public class Launcher {
         }
         System.out.println(String.format("Your table has now %s players!",reaction));
 
-        //TODO handle quit, kickPlayer, getToken, victoryGame, distributeGains, victoryRound
+        System.out.println("Start the game ?");
+        scanner.nextLine();
+        //Tour 1
+        System.out.println("[Everyone - Turn is beginning]");
+
+        //TODO generify this to use a while loop
+        System.out.println("[J1 - Your turn]");
+        System.out.println("[J1 - You want to wager how many tokens ?]");
+        int token = Integer.parseInt(scanner.nextLine());
+        reaction = poker.play(token).send();
+
+
+        System.out.println("[J2 - Your turn]");
+        System.out.println("[J2 - You want to wager how many tokens ?]");
+        token = Integer.parseInt(scanner.nextLine());
+        reaction = poker.play(token).send();
+
+        System.out.println("[Everyone - Turn 1 is over]");
+        poker.victoryRound().send();
+        reaction = poker.getToken().send();
+        System.out.println(String.format("[J1 - You have now %s tokens!]",reaction));
+        reaction = poker.getToken().send();
+        System.out.println(String.format("[J2 - You have now %s tokens!]",reaction));
+        System.out.println("[Everyone - Turn 2 is beginning]");
+        //TODO Turn 2
+        System.out.println("[Everyone - Turn 2 is over]");
+        poker.victoryRound().send();
+        System.out.println("[Everyone - Gains will be distributed]");
+        poker.victoryGame().send();
+        //TODO implement new round
     }
 }
