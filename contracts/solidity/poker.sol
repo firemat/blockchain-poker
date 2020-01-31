@@ -38,7 +38,7 @@ contract poker {
         return 0;
     }
 
-    function quit() public returns (address) {
+    function quit() public payable returns (address) {
         address id_quit;
         id_quit= msg.sender;
         kickPlayer(id_quit);
@@ -73,7 +73,7 @@ contract poker {
         }
     }
 
-    function play(uint16 amount) public {      
+    function play(uint16 amount) public payable {      
       Player memory p = players[ad2Index[msg.sender]];
       require(p.playerState==State.UNCERTAIN);
       if(p.raise+amount > p.tokens) { // ALLIN
@@ -177,6 +177,18 @@ contract poker {
         scores[i] = players[i].score;
       }
       return scores;
+    }
+
+    /*function getHand() public view returns (bytes1[6]) {
+      Player memory p = players[ad2Index[msg.sender]];
+      bytes memory c1 = bytes(p.hand[0]);
+      bytes memory c2 = bytes(p.hand[1]);
+      bytes1[6] memory c = [c1[0],c1[1],c1[2],c2[0],c[1],c[2]]; 
+      return c;
+    }*/
+
+    function getCard(uint i) public view returns (string) {
+      return players[ad2Index[msg.sender]].hand[i];
     }
 
     function getWinningPlayer() public returns (uint) {
