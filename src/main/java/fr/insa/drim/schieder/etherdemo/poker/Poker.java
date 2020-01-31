@@ -1,4 +1,4 @@
-package fr.insa.drim.schieder.etherdemo.animal;
+package fr.insa.drim.schieder.etherdemo.poker;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -6,10 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Uint;
-import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.*;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
@@ -33,8 +30,12 @@ public class Poker extends Contract {
     public static final String FUNC_QUIT = "quit";
     public static final String FUNC_TOKEN = "getToken";
     public static final String FUNC_PLAY = "play";
+    public static final String FUNC_SCORES = "getScores";
     public static final String FUNC_VICTORY_GAME = "victoryGame";
+    public static final String FUNC_PLAYER_WIN = "getWinningPlayer";
     public static final String FUNC_VICTORY_ROUND = "victoryRound";
+    public static final String FUNC_REVEAL = "reveledRiver";
+    public static final String FUNC_RANK_HAND = "rankPokerHand";
 
     protected Poker(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
@@ -74,8 +75,49 @@ public class Poker extends Contract {
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
+    public RemoteCall<String> getRankHand(int[] ranks, int[] colors) {
+        List<Type> inputParameters= new ArrayList<>();
+        List<Type> inputRanks= new ArrayList<>();
+        for(int r:ranks){
+            inputRanks.add(new Uint( BigInteger.valueOf(r)));
+        }
+
+        List<Type> inputColors= new ArrayList<>();
+        for(int c:colors){
+            inputColors.add(new Uint(BigInteger.valueOf(c)));
+        }
+
+        inputParameters.add(new DynamicArray(inputRanks));
+        inputParameters.add(new DynamicArray(inputColors));
+        final Function function = new Function(FUNC_RANK_HAND,
+                inputParameters,
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
     public RemoteCall<String> victoryGame() {
         final Function function = new Function(FUNC_VICTORY_GAME,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteCall<String> getWinner() {
+        final Function function = new Function(FUNC_PLAYER_WIN,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteCall<String> getScores() {
+        final Function function = new Function(FUNC_SCORES,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteCall<String> reveledRiver() {
+        final Function function = new Function(FUNC_REVEAL,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);

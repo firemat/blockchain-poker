@@ -1,4 +1,4 @@
-package fr.insa.drim.schieder.etherdemo.animal;
+package fr.insa.drim.schieder.etherdemo.poker;
 
 import java.util.Scanner;
 
